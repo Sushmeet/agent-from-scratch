@@ -1,14 +1,18 @@
 import { openai } from './ai'
 import type { AIMessage } from '../types'
 
-type UserMessage = {
-  userMessage: string
+// type UserMessage = {
+//   userMessage: string
+// }
+
+type Messages = {
+  messages: AIMessage[]
 }
 
-export const runLLM = async ({ userMessage }: UserMessage) => {
+export const runLLM = async ({ messages }: Messages) => {
   const response = await openai.chat.completions.create({
     model: 'gpt-5-nano',
-    messages: [{ role: 'user', content: userMessage }],
+    messages,
     // temperature: 0.1,
   })
 
