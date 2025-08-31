@@ -1,6 +1,7 @@
 // import { AIMessage } from '../types'
 import { runLLM } from './llm'
-import { getMessages, addMessages } from './memory'
+import { getMessages, addMessages, saveToolResponse } from './memory'
+import { runTool } from './toolRunner'
 import { logMessage, showLoader } from './ui'
 
 export const runAgent = async ({
@@ -19,13 +20,19 @@ export const runAgent = async ({
     messages,
     tools,
   })
+  await addMessages([response])
 
   if (response.tool_calls) {
-    console.log(response.tool_calls)
+    const toolCall = response.tool_calls[0]
+    loader.update(`executing: ${toolCall.function.name}`)
+
+    const toolResponse = await runTool(toolCall, userMessage)
+    saveToolResponse(toolCall.id, toolResponse)
+
+    loader.update(`executed: ${toolCall.function.name}`)
   }
 
-  await addMessages([response])
-  //   logMessage(response)
+  logMessage(response)
   loader.stop()
   return getMessages()
 }
