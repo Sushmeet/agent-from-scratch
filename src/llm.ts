@@ -1,6 +1,7 @@
 import { openai } from './ai'
 import type { AIMessage } from '../types'
 import { zodFunction } from 'openai/helpers/zod'
+import { systemPrompt } from './systemPrompt'
 
 // type UserMessage = {
 //   userMessage: string
@@ -18,7 +19,7 @@ export const runLLM = async ({
 
   const response = await openai.chat.completions.create({
     model: 'gpt-5-nano',
-    messages,
+    messages: [{ role: 'system', content: systemPrompt }, ...messages],
     tools: formattedTools,
     tool_choice: 'auto',
     parallel_tool_calls: false,
