@@ -1,6 +1,7 @@
 import 'dotenv/config'
 import { runAgent } from './src/agent'
 import { z } from 'zod'
+import { tools } from './src/tools'
 // import { runLLM } from './src/llm'
 // import { getMessages, addMessages } from './src/memory'
 
@@ -38,4 +39,6 @@ const weatherTool = {
   }),
 }
 
-const response = await runAgent({ userMessage, tools: [weatherTool] })
+// const response = await runAgent({ userMessage, tools: [weatherTool] })
+
+const response = await runAgent({ userMessage, tools })
